@@ -1,0 +1,5 @@
+---
+prometheus_path: '/opt/prometheus'
+prometheus_port: '9090'
+prometheus_retentiontime: '10y'
+backup_path: '/backup'

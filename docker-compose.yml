@@ -1,0 +1,18 @@
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-admin-api'
+      - '--storage.tsdb.retention.time=10y'
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - '9090:9090'
+
+volumes:
+  prometheus_data:

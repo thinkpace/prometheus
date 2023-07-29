@@ -1,0 +1,12 @@
+#!/bin/sh
+
+backup_path={{ backup_path }}
+
+# Trigger Prometheus snapshot creation
+snapshot_name=$(curl -X POST http://localhost:9090/api/v1/admin/tsdb/snapshot | sed -En 's/.*"name":"([^"]*).*/\1/p')
+
+# Locate snapshot path
+source_path=$(docker volume inspect --format '{{ '{{ .Mountpoint }}' }}' prometheus_prometheus_data)
+
+# Create backup archive
+tar cvfz $backup_path/prometheus_backup_$snapshot_name.tgz $source_path/data/snapshots/$snapshot_name
