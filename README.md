@@ -96,8 +96,8 @@ scrape_configs:
   scheme: http
   static_configs:
   - targets:
-    - localhost:9090
-    - localhost:9091
+    - prometheus_target1.internal:9090
+    - prometheus_target2.internal:9091
 - job_name: node
   honor_timestamps: true
   metrics_path: /metrics
