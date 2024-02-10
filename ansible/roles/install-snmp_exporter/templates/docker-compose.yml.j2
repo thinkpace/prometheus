@@ -1,0 +1,10 @@
+services:
+  snmp:
+    container_name: 'snmp_exporter'
+    image: prom/snmp-exporter:v0.22.0
+    volumes:
+      - '{{ snmp_exporter_path }}/snmp.yml:/etc/snmp_exporter/snmp.yml'
+    ports:
+      - '{{ snmp_exporter_tcp_port }}:9116'
+      - '{{ snmp_exporter_udp_port }}:116/udp'
+    command: '--config.file=/etc/snmp_exporter/snmp.yml'

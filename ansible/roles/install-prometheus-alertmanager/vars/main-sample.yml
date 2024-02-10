@@ -1,0 +1,6 @@
+---
+prometheus_alertmanager_path: '/opt/prometheus-alertmanager'
+prometheus_alertmanager_port: '9093'
+pushover_user_key: 'YOURPUSHOVERKEY'
+pushover_token_infrastructure: 'YOURPUSHOVERTOKEN'
+pushover_token_photovoltaik: 'YOURPUSHOVERTOKEN'

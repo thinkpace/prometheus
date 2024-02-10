@@ -1,0 +1,4 @@
+---
+snmp_exporter_path: '/opt/snmp_exporter'
+snmp_exporter_tcp_port: '9116'
+snmp_exporter_udp_port: '116'

@@ -1,0 +1,29 @@
+---
+- name: Create installation directory
+  file:
+    path: '{{ prometheus_alertmanager_path }}'
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+- name: Copy docker-compose.yml
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: '{{ prometheus_alertmanager_path }}/docker-compose.yml'
+    owner: root
+    group: root
+    mode: 0664
+- name: Copy alertmanager.yml
+  ansible.builtin.template:
+    src: alertmanager.yml.j2
+    dest: '{{ prometheus_alertmanager_path }}/alertmanager.yml'
+    owner: root
+    group: root
+    mode: 0664
+- name: Enable daily upgrade of base image
+  ansible.builtin.cron:
+    name: 'Upgrade {{ prometheus_alertmanager_path }}'
+    user: root
+    hour: 4
+    minute: 0
+    job: 'docker compose -f {{ prometheus_alertmanager_path }}/docker-compose.yml down && docker compose -f {{ prometheus_alertmanager_path }}/docker-compose.yml pull && docker compose -f {{ prometheus_alertmanager_path }}/docker-compose.yml up -d'

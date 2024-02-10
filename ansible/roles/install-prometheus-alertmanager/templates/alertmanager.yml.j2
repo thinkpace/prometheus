@@ -1,0 +1,39 @@
+route:
+  receiver: 'pushover_infrastructure_prio_low'
+  group_by: [ alertname ]
+  repeat_interval: 20h
+  routes:
+  - receiver: 'pushover_infrastructure_prio_normal'
+    matchers:
+    - alertname='service_down'
+    mute_time_intervals:
+    - update_time
+    repeat_interval: 4h
+  - receiver: 'pushover_photovoltaik_prio_low'
+    matchers:
+    - category='photovoltaik'
+    - frequency='daily'
+
+time_intervals:
+  - name: update_time
+    time_intervals:
+    - times:
+      - start_time: '00:00'
+        end_time: '06:00'
+
+receivers:
+  - name: 'pushover_infrastructure_prio_normal'
+    pushover_configs:
+      - user_key: {{ pushover_user_key }}
+        token: {{ pushover_token_infrastructure }}
+        priority: '0'
+  - name: 'pushover_infrastructure_prio_low'
+    pushover_configs:
+      - user_key: {{ pushover_user_key }}
+        token: {{ pushover_token_infrastructure }}
+        priority: '-1'
+  - name: 'pushover_photovoltaik_prio_low'
+    pushover_configs:
+      - user_key: {{ pushover_user_key }}
+        token: {{ pushover_token_photovoltaik }}
+        priority: '-1'

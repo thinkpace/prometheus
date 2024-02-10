@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 60s
+  scrape_timeout: 15s
+  evaluation_interval: 15s
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets: ['{{ prometheus_alertmanager_url }}']
+rule_files:
+- 'alertrules.yml'
+scrape_config_files:
+- 'scrape_configs.yml'

@@ -1,12 +1,34 @@
 #!/bin/sh
 
+mode=$1
+
 backup_path={{ backup_path }}
+backup_owner={{ backup_owner }}
+
+backup_name='prometheus_backup'
+
+if [ $mode = 'weekly' ];
+then
+  backup_name="$backup_name"_weekly
+elif [ $mode = 'monthly' ];
+then
+  backup_name="$backup_name"_monthly
+else
+  backup_name="$backup_name"_daily
+fi
 
 # Trigger Prometheus snapshot creation
-snapshot_name=$(curl -X POST http://localhost:9090/api/v1/admin/tsdb/snapshot | sed -En 's/.*"name":"([^"]*).*/\1/p')
+snapshot_name=$(curl -X POST http://localhost:{{ prometheus_port }}/api/v1/admin/tsdb/snapshot | sed -En 's/.*"name":"([^"]*).*/\1/p')
+sonnen_snapshot_name=$(curl -X POST http://localhost:{{ prometheus_sonnen_port }}/api/v1/admin/tsdb/snapshot | sed -En 's/.*"name":"([^"]*).*/\1/p')
 
 # Locate snapshot path
 source_path=$(docker volume inspect --format '{{ '{{ .Mountpoint }}' }}' prometheus_prometheus_data)
+sonnen_source_path=$(docker volume inspect --format '{{ '{{ .Mountpoint }}' }}' prometheus_prometheus_sonnen_data)
 
 # Create backup archive
-tar cvfz $backup_path/prometheus_backup_$snapshot_name.tgz $source_path/data/snapshots/$snapshot_name
+tar cvfz $backup_path/$backup_name-$snapshot_name.tgz $source_path/data/snapshots/$snapshot_name
+tar cvfz $backup_path/$backup_name-sonnen-$snapshot_name.tgz $sonnen_source_path/data/snapshots/$sonnen_snapshot_name
+
+# Set ownership
+chown $backup_owner $backup_path/$backup_name-$snapshot_name.tgz
+chown $backup_owner $backup_path/$backup_name-sonnen-$snapshot_name.tgz

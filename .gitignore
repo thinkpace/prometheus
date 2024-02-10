@@ -1,2 +1,7 @@
+ansible/roles/install-prometheus/files/alertrules.yml
+ansible/roles/install-prometheus/files/alertrules_sonnen.yml
+ansible/roles/install-prometheus/files/scrape_configs.yml
+ansible/roles/install-prometheus/files/scrape_configs_sonnen.yml
 ansible/roles/install-prometheus/vars/main.yml
-ansible/roles/install-prometheus/files/prometheus.yml
+
+ansible/roles/install-prometheus-alertmanager/vars/main.yml

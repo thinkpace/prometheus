@@ -6,13 +6,35 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--web.enable-admin-api'
+      - '--web.enable-lifecycle'
       - '--storage.tsdb.retention.time={{ prometheus_retentiontime }}'
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alertrules.yml:/etc/prometheus/alertrules.yml
+      - ./scrape_configs.yml:/etc/prometheus/scrape_configs.yml
       - prometheus_data:/prometheus
     ports:
       - '{{ prometheus_port }}:9090'
 
+  prometheus_sonnen:
+    container_name: prometheus_sonnen
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-admin-api'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.retention.time={{ prometheus_sonnen_retentiontime }}'
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./prometheus_sonnen.yml:/etc/prometheus/prometheus.yml
+      - ./alertrules_sonnen.yml:/etc/prometheus/alertrules.yml
+      - ./scrape_configs_sonnen.yml:/etc/prometheus/scrape_configs.yml
+      - prometheus_sonnen_data:/prometheus
+    ports:
+      - '{{ prometheus_sonnen_port }}:9090'
+
 volumes:
   prometheus_data:
+  prometheus_sonnen_data:

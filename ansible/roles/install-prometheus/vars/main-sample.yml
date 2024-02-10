@@ -1,5 +1,9 @@
 ---
 prometheus_path: '/opt/prometheus'
 prometheus_port: '9090'
-prometheus_retentiontime: '10y'
+prometheus_retentiontime: '90d'
+prometheus_sonnen_port: '9091'
+prometheus_sonnen_retentiontime: '1y'
+prometheus_alertmanager_url: 'localhost:9093'
 backup_path: '/backup'
+backup_owner: 'backup:backup'
