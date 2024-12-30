@@ -5,14 +5,14 @@ route:
   routes:
   - receiver: 'pushover_infrastructure_prio_normal'
     matchers:
-    - alertname='service_down'
+    - alertname="service_down"
     mute_time_intervals:
     - update_time
     repeat_interval: 4h
   - receiver: 'pushover_photovoltaik_prio_low'
     matchers:
-    - category='photovoltaik'
-    - frequency='daily'
+    - category="photovoltaik"
+    - frequency="daily"
 
 time_intervals:
   - name: update_time
