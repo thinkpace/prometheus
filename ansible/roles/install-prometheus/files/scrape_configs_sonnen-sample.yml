@@ -1,0 +1,42 @@
+scrape_configs:
+- job_name: sonnen_v2_status
+  honor_timestamps: true
+  scheme: http
+  metrics_path: /probe
+  params:
+    module: ['sonnen_v2_status']
+    target: ['http://YOURBATTERYURL/api/v2/status']
+  static_configs:
+  - targets:
+    - YOURSONNENEXPORTERURL:7979
+- job_name: sonnen_v2_battery
+  honor_timestamps: true
+  scheme: http
+  metrics_path: /probe
+  params:
+    module: ['sonnen_v2_battery']
+    target: ['http://YOURBATTERYURL/api/v2/battery']
+  static_configs:
+  - targets:
+    - YOURSONNENEXPORTERURL:7979
+- job_name: sonnen_v2_inverter
+  honor_timestamps: true
+  scheme: http
+  metrics_path: /probe
+  params:
+    module: ['sonnen_v2_inverter']
+    target: ['http://YOURBATTERYURL/api/v2/inverter']
+  static_configs:
+  - targets:
+    - YOURSONNENEXPORTERURL:7979
+- job_name: sonnen_v2_configurations
+  honor_timestamps: true
+  scrape_interval: 1d
+  scheme: http
+  metrics_path: /probe
+  params:
+    module: ['sonnen_v2_configurations']
+    target: ['http://YOURBATTERYURL/api/v2/configurations']
+  static_configs:
+  - targets:
+    - YOURSONNENEXPORTERURL:7979

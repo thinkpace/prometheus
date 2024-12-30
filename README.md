@@ -4,7 +4,7 @@ This repository covers my personal [Prometheus](https://prometheus.io) instances
 
 It covers setup, upgrade and backup of this instance. I publish it because it might help anybody to setup a similar solution.
 
-# Drawbacks
+## Drawbacks
 
 There are some drawbacks in this scenario which I would like to point out:
 
@@ -14,7 +14,7 @@ There are some drawbacks in this scenario which I would like to point out:
 * [Management API](https://prometheus.io/docs/prometheus/latest/management_api/) is enabled and accessible without authentication/authorization.
 * docker-compose.yml is referencing to the latest images available in Docker Registry. In a commercial environment, this is often seen as an anti pattern because it could lead to unintended updates and broken systems. However, in my specific scenario, I want to refer to the latest available image. If something fails unintended, I need to fix it.
 
-# Requirements
+## Requirements
 
 * Ansible 2.7 or higher
 * Docker runtime environment with docker compose
@@ -58,7 +58,7 @@ Install snmp_exporter on hosts of group "prometheus_snmp_exporter" (please note 
     - install-snmp_exporter
 ```
 
-# Setup
+## Setup
 
 First of all, install Prometheus collection from Ansible Galaxy:
 
@@ -71,120 +71,19 @@ After that, please instantiate Ansible var samples:
 ```
 cd /YOUR/REPO/CHECKOUT/PATH/ansible
 cp roles/install-prometheus/vars/main-sample.yml roles/install-prometheus/vars/main.yml
+cp roles/install-prometheus/files/alertrules_sonnen-sample.yml roles/install-prometheus/files/alertrules_sonnen.yml
+cp roles/install-prometheus/files/alertrules-sample.yml roles/install-prometheus/files/alertrules.yml
+cp roles/install-prometheus/files/scrape_configs_sonnen-sample.yml roles/install-prometheus/files/scrape_configs_sonnen.yml
+cp roles/install-prometheus/files/scrape_configs-sample.yml roles/install-prometheus/files/scrape_configs.yml
 cp roles/install-prometheus-alertmanager/vars/main-sample.yml roles/install-prometheus-alertmanager/vars/main.yml
 ```
 
-Open `roles/install-prometheus/vars/main.yml` in your prefered editor and adapt settings. If you would like to use backup, please make sure configured backup path is available.
+Open following files in your prefered editor and adapt settings. Backup is implemented using rsync.
 
-Open `roles/install-prometheus-alertmanager/vars/main.yml` in your prefered editor and adapt prometheus config according to your requirements. In my setup, Alertmanager is using [Pushover](https://pushover.net/) to send notifications.
+* `ansible/roles/install-prometheus/vars/main.yml`
+* `ansible/roles/install-prometheus-alertmanager/vars/main.yml`
 
-[main.yml](ansible/roles/install-prometheus/tasks/main.yml) is refering to multiple files, which do not exist in this repo:
-
-* `ansible/roles/install-prometheus/files/scrape_configs.yml`
-* `ansible/roles/install-prometheus/files/scrape_configs_sonnen.yml`
-* `ansible/roles/install-prometheus/files/alertrules.yml`
-* `ansible/roles/install-prometheus/files/alertrules_sonnen.yml`
-
-Please create them according to your needs, find some sample content below:
-
-`scrape_configs.yml`:
-```
-scrape_configs:
-- job_name: prometheus
-  honor_timestamps: true
-  metrics_path: /metrics
-  scheme: http
-  static_configs:
-  - targets:
-    - prometheus_target1.internal:9090
-    - prometheus_target2.internal:9091
-- job_name: node
-  honor_timestamps: true
-  metrics_path: /metrics
-  scheme: http
-  static_configs:
-  - targets:
-    - node_target1.internal:9100
-    - node_target2.internal:9100
-- job_name: 'snmp-exporter'
-  static_configs:
-  - targets:
-    - snmp_target1.internal
-    - snmp_target2.internal
-  metrics_path: /snmp
-  params:
-    module: [synology]
-  relabel_configs:
-    - source_labels: [__address__]
-      target_label: __param_target
-    - source_labels: [__param_target]
-      target_label: instance
-    - source_labels: [__param_target]
-      regex: (.*)
-      replacement: snmp_exporter.internal:9116
-      target_label: __address__
-```
-
-`scrape_configs_sonnen.yml`:
-```
-scrape_configs:
-- job_name: sonnen_v2_status
-  honor_timestamps: true
-  scheme: http
-  metrics_path: /probe
-  params:
-    module: ['sonnen_v2_status']
-    target: ['http://SONNEN_BATTERY.internal/api/v2/status']
-  static_configs:
-  - targets:
-    - SONNEN_EXPORTER.internal:7979
-- job_name: sonnen_v2_battery
-  honor_timestamps: true
-  scheme: http
-  metrics_path: /probe
-  params:
-    module: ['sonnen_v2_battery']
-    target: ['http://SONNEN_BATTERY.internal/api/v2/battery']
-  static_configs:
-  - targets:
-    - SONNEN_EXPORTER.internal:7979
-- job_name: sonnen_v2_inverter
-  honor_timestamps: true
-  scheme: http
-  metrics_path: /probe
-  params:
-    module: ['sonnen_v2_inverter']
-    target: ['http://SONNEN_BATTERY.internal/api/v2/inverter']
-  static_configs:
-  - targets:
-    - SONNEN_EXPORTER.internal:7979
-- job_name: sonnen_v2_configurations
-  honor_timestamps: true
-  scrape_interval: 1d
-  scheme: http
-  metrics_path: /probe
-  params:
-    module: ['sonnen_v2_configurations']
-    target: ['http://SONNEN_BATTERY.internal/api/v2/configurations']
-  static_configs:
-  - targets:
-    - SONNEN_EXPORTER.internal:7979
-```
-
-`alertrules.yml` and `alertrules_sonnen.yml`:
-```
-groups:
-- name: PV Notifications
-  rules:
-  - alert: battery_l_15
-    expr: sonnen_v2_battery_relativestateofcharge_percent < 15
-    labels:
-      category: photovoltaik
-      severity: info
-      frequency: daily
-    annotations:
-      summary: 'Battery {{ $value  }}, less than 15%'
-```
+In my setup, Alertmanager is using [Pushover](https://pushover.net/) to send notifications.
 
 To execute this Ansible playbook, you can use following command:
 
@@ -192,7 +91,7 @@ To execute this Ansible playbook, you can use following command:
 ansible -i /PATH/TO/INVENTORY /YOUR/REPO/CHECKOUT/PATH/ansible/ansible_playbook.yml
 ```
 
-## Start
+### Start
 
 After setup, all containers needs to get started executing
 
@@ -202,10 +101,10 @@ docker compose up -d
 
 in setup directory (for Prometheus, Alertmanager and snmp_exporter).
 
-## Upgrade
+### Upgrade
 
 Ansible role is creating a cronjob which updates base images every night.
 
-# Backup
+## Backup
 
-Backup script triggers a snapshot using Prometheus Admin API. A tgz containing this snapshot will be created at configured backup_path (see [main-sample.yml](/ansible/roles/install-prometheus/vars/main-sample.yml)).
+Backup script triggers a snapshot using Prometheus Admin API. A tgz containing this snapshot will be created at configured rsync target (see [main-sample.yml](/ansible/roles/install-prometheus/vars/main-sample.yml) and [backup_prometheus.sh.j2](/ansible/roles/install-prometheus/templates/backup_prometheus.sh.j2)).

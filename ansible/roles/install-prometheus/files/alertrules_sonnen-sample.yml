@@ -1,0 +1,19 @@
+groups:
+- name: PV Notifications
+  rules:
+  - alert: battery_l_95
+    expr: sonnen_v2_battery_relativestateofcharge_percent < 95
+    labels:
+      category: photovoltaik
+      severity: info
+      frequency: daily
+    annotations:
+      summary: 'Battery {{ $value  }}, less than 95%'
+  - alert: battery_l_15
+    expr: sonnen_v2_battery_relativestateofcharge_percent < 15
+    labels:
+      category: photovoltaik
+      severity: info
+      frequency: daily
+    annotations:
+      summary: 'Battery {{ $value  }}, less than 15%'

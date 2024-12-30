@@ -1,0 +1,11 @@
+groups:
+- name: Tech Issue
+  rules:
+  - alert: service_down
+    expr: up == 0
+    for: 5m
+    labels:
+      category: infrastructure
+      severity: critical
+    annotations:
+      summary: 'Instance {{ $labels.instance }} down'
