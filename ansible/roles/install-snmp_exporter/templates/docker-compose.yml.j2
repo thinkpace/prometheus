@@ -2,6 +2,7 @@ services:
   snmp:
     container_name: 'snmp_exporter'
     image: prom/snmp-exporter:v0.22.0
+    restart: unless-stopped
     volumes:
       - '{{ snmp_exporter_path }}/snmp.yml:/etc/snmp_exporter/snmp.yml'
     ports:
