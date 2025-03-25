@@ -13,13 +13,15 @@ route:
     matchers:
     - category="photovoltaik"
     - frequency="daily"
+    mute_time_intervals:
+    - update_time
 
 time_intervals:
   - name: update_time
     time_intervals:
     - times:
-      - start_time: '00:00'
-        end_time: '06:00'
+      - start_time: '03:50'
+        end_time: '05:10'
       location: 'Europe/Berlin'
 
 receivers:
