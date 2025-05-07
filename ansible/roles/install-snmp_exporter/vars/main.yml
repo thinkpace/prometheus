@@ -1,4 +1,9 @@
 ---
-snmp_exporter_path: '/opt/snmp_exporter'
-snmp_exporter_tcp_port: '9116'
-snmp_exporter_udp_port: '116'
+snmp_exporter:
+  path: '/opt/snmp_exporter'
+  tcp_port: '9116'
+  udp_port: '116'
+  update_docker:
+    time:
+      cron_hour: 4
+      cron_minute: 30

@@ -1,7 +1,7 @@
 ---
 - name: Create installation directory
   ansible.builtin.file:
-    path: '{{ prometheus.path }}'
+    path: '{{ prometheus_sonnen.path }}'
     state: directory
     owner: root
     group: root
@@ -9,38 +9,38 @@
 - name: Copy docker-compose.yml
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: '{{ prometheus.path }}/docker-compose.yml'
+    dest: '{{ prometheus_sonnen.path }}/docker-compose.yml'
     owner: root
     group: root
     mode: '0664'
 - name: Copy prometheus.yml
   ansible.builtin.template:
     src: prometheus.yml.j2
-    dest: '{{ prometheus.path }}/prometheus.yml'
+    dest: '{{ prometheus_sonnen.path }}/prometheus.yml'
     owner: root
     group: root
     mode: '0664'
 - name: Copy alertrules.yml
   ansible.builtin.copy:
     src: alertrules.yml
-    dest: '{{ prometheus.path }}/alertrules.yml'
+    dest: '{{ prometheus_sonnen.path }}/alertrules.yml'
     owner: root
     group: root
     mode: '0664'
 - name: Copy scrape_configs.yml
   ansible.builtin.copy:
     src: scrape_configs.yml
-    dest: '{{ prometheus.path }}/scrape_configs.yml'
+    dest: '{{ prometheus_sonnen.path }}/scrape_configs.yml'
     owner: root
     group: root
     mode: '0664'
 - name: Enable daily upgrade of base image
   ansible.builtin.cron:
-    name: 'Upgrade {{ prometheus.path }}'
+    name: 'Upgrade {{ prometheus_sonnen.path }}'
     user: root
-    hour: '{{ prometheus.update_docker.time.cron_hour }}'
-    minute: '{{ prometheus.update_docker.time.cron_minute }}'
+    hour: '{{ prometheus_sonnen.update_docker.time.cron_hour }}'
+    minute: '{{ prometheus_sonnen.update_docker.time.cron_minute }}'
     job: >
-      docker compose -f {{ prometheus.path }}/docker-compose.yml stop &&
-      docker compose -f {{ prometheus.path }}/docker-compose.yml pull &&
-      docker compose -f {{ prometheus.path }}/docker-compose.yml up -d
+      docker compose -f {{ prometheus_sonnen.path }}/docker-compose.yml stop &&
+      docker compose -f {{ prometheus_sonnen.path }}/docker-compose.yml pull &&
+      docker compose -f {{ prometheus_sonnen.path }}/docker-compose.yml up -d

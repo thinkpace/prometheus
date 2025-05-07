@@ -1,8 +1,8 @@
 ---
-prometheus:
-  path: '/opt/prometheus'
-  port: '9090'
-  retentiontime: '90d'
+prometheus_sonnen:
+  path: '/opt/prometheus_sonnen'
+  port: '9091'
+  retentiontime: '1y'
   alertmanager_url: 'localhost:9093'
   update_docker:
     time:

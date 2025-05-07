@@ -1,29 +1,32 @@
 ---
 - name: Create installation directory
-  file:
-    path: '{{ snmp_exporter_path }}'
+  ansible.builtin.file:
+    path: '{{ snmp_exporter.path }}'
     state: directory
     owner: root
     group: root
-    mode: 0775
+    mode: '0775'
 - name: Copy docker-compose.yml
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: '{{ snmp_exporter_path }}/docker-compose.yml'
+    dest: '{{ snmp_exporter.path }}/docker-compose.yml'
     owner: root
     group: root
-    mode: 0664
+    mode: '0664'
 - name: Copy snmp.yml
   ansible.builtin.copy:
     src: snmp.yml
-    dest: '{{ snmp_exporter_path }}/snmp.yml'
+    dest: '{{ snmp_exporter.path }}/snmp.yml'
     owner: root
     group: root
-    mode: 0664
+    mode: '0664'
 - name: Enable daily upgrade of base image
   ansible.builtin.cron:
-    name: 'Upgrade {{ snmp_exporter_path }}'
+    name: 'Upgrade {{ snmp_exporter.path }}'
     user: root
-    hour: 4
-    minute: 0
-    job: 'docker compose -f {{ snmp_exporter_path }}/docker-compose.yml down && docker compose -f {{ snmp_exporter_path }}/docker-compose.yml pull && docker compose -f {{ snmp_exporter_path }}/docker-compose.yml up -d'
+    hour: '{{ snmp_exporter.update_docker.time.cron_hour }}'
+    minute: '{{ snmp_exporter.update_docker.time.cron_minute }}'
+    job: >
+      docker compose -f {{ snmp_exporter.path }}/docker-compose.yml stop &&
+      docker compose -f {{ snmp_exporter.path }}/docker-compose.yml pull &&
+      docker compose -f {{ snmp_exporter.path }}/docker-compose.yml up -d

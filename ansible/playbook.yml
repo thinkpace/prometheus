@@ -1,18 +1,27 @@
-- hosts: prometheus
+- name: Install Prometheus
+  hosts: prometheus
   become: true
   roles:
     - install-prometheus
-- hosts: prometheus
+- name: Install Prometheus Sonnen
+  hosts: prometheus_sonnen
+  become: true
+  roles:
+    - install-prometheus-sonnen
+- name: Install Prometheus Alertmanager
+  hosts: prometheus_alertmanager
   become: true
   roles:
     - install-prometheus-alertmanager
-- hosts: prometheus_node_exporter
+- name: Install Node exporter
+  hosts: prometheus_node_exporter
   become: true
   roles:
     - prometheus.prometheus.node_exporter
   vars:
     node_exporter_enabled_collectors: ["systemd", "processes", {"textfile": {"directory": "{{ node_exporter_textfile_dir }}"}}]
-- hosts: prometheus_snmp_exporter
+- name: Install SNMP exporter
+  hosts: prometheus_snmp_exporter
   become: true
   roles:
     - install-snmp_exporter

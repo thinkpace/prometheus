@@ -1,6 +1,12 @@
 ---
-prometheus_alertmanager_path: '/opt/prometheus-alertmanager'
-prometheus_alertmanager_port: '9093'
-pushover_user_key: 'YOURPUSHOVERKEY'
-pushover_token_infrastructure: 'YOURPUSHOVERTOKEN'
-pushover_token_photovoltaik: 'YOURPUSHOVERTOKEN'
+prometheus_alertmanager:
+  path: '/opt/prometheus-alertmanager'
+  port: '9093'
+  update_docker:
+    time:
+      cron_hour: 4
+      cron_minute: 30
+pushover:
+  user_key: 'YOURPUSHOVERKEY'
+  token_infrastructure: 'YOURPUSHOVERTOKEN'
+  token_photovoltaik: 'YOURPUSHOVERTOKEN'

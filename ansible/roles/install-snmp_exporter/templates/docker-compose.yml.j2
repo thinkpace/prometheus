@@ -4,8 +4,8 @@ services:
     image: prom/snmp-exporter:v0.22.0
     restart: unless-stopped
     volumes:
-      - '{{ snmp_exporter_path }}/snmp.yml:/etc/snmp_exporter/snmp.yml'
+      - '{{ snmp_exporter.path }}/snmp.yml:/etc/snmp_exporter/snmp.yml'
     ports:
-      - '{{ snmp_exporter_tcp_port }}:9116'
-      - '{{ snmp_exporter_udp_port }}:116/udp'
+      - '{{ snmp_exporter.tcp_port }}:9116'
+      - '{{ snmp_exporter.udp_port }}:116/udp'
     command: '--config.file=/etc/snmp_exporter/snmp.yml'

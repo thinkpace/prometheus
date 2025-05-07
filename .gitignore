@@ -4,4 +4,10 @@ ansible/roles/install-prometheus/files/scrape_configs.yml
 ansible/roles/install-prometheus/files/scrape_configs_sonnen.yml
 ansible/roles/install-prometheus/vars/main.yml
 
+ansible/roles/install-prometheus-sonnen/files/alertrules.yml
+ansible/roles/install-prometheus-sonnen/files/alertrules_sonnen.yml
+ansible/roles/install-prometheus-sonnen/files/scrape_configs.yml
+ansible/roles/install-prometheus-sonnen/files/scrape_configs_sonnen.yml
+ansible/roles/install-prometheus-sonnen/vars/main.yml
+
 ansible/roles/install-prometheus-alertmanager/vars/main.yml
